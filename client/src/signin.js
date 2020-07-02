@@ -10,19 +10,24 @@ import {
 
 import {
     Link,
-    withRouter  
+    withRouter,
+    Redirect
 } from 'react-router-dom';
+
+import history from './history'
 
 class Signin extends React.Component {
 
     state = {
+        redirect: false,
+        path: '',
         email: '',
         password: ''
     }
     componentDidMount() {
         if(localStorage.fullName) {
             console.log('redirecting')
-            this.props.history.push('/home')
+            history.push('/home')
         }
     }
     onLogin = () => {
@@ -42,16 +47,18 @@ class Signin extends React.Component {
             axios.defaults.headers.common['Authorization'] = data.token;
             localStorage.token = data.token;
             localStorage.fullName = data.fullName;
-            this.props.history.push('/home');
+            history.push('/home')
             
 
         })
 
     }
 
+
     render() {
         return (
             <>
+              
                 <h2>Ingresar</h2>
 
                 <Box pad="xsmall">

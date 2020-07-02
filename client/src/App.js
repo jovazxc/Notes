@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 
 import {
-  BrowserRouter as Router,
+  Router,
   Switch,
   Route,
   Redirect
@@ -36,21 +36,22 @@ const theme = {
 
  class App extends React.Component {
 
+  state = {
+
+  }
   componentWillMount() {
-    console.log(localStorage.token)
     if(localStorage.token) axios.defaults.headers.common['Authorization'] = localStorage.token; 
   }
+  
  
   render() {
     return (
       <Grommet theme={theme} >
-        <Box flex="grow" fill="vertical" align="center" background="neutral-2">
+        <Box flex="grow" fill="vertical" align="center" background="neutral-2" style={{minHeight: '100vh'}}>
         <Router history={history}>
-            
-            <Switch>
-              <Route exact path="/">
-                {localStorage.fullName ? <Redirect to="/home" /> : <Main />}
-              </Route>
+
+            <Switch> 
+              <Route exact path="/" component={Main} />
 
               <Route exact path="/signin" component={Signin} />
               <Route exact path="/signup" component={Signup} />

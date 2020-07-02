@@ -9,8 +9,16 @@ import {
     Link
 } from 'react-router-dom'
 
+import history from './history';
 
 class Main extends React.Component {
+    componentDidMount() {
+        if(localStorage.getItem('token') !== null) {
+          // redirect to home
+          history.push('/home')
+        }
+      }
+
     render() {
         return (
             <>

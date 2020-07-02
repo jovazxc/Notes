@@ -78,15 +78,51 @@ app.post('/api/register', (req, res) => {
 
 })
 
-app.post('/api/create', (req, res) => {
+app.post('/api/notes/create', (req, res) => {
     if(!req.headers.authorization) {
         return res.status(403).send({message: "Tu petición no tiene cabecera de autorización"});
     }
 
     let user = jwt.decode(req.headers.authorization, config.token);
-    console.log(user)
+    db.query('INSERT INTO Notes SET ?', {
+        user_id: user.id,
+        title: 'Sin título',
+        created_date: moment().format('MMMM Do YYYY, h:mm:ss a'),
+        content: 'Edit Me'
+    }, (err, ins) => {
+        if(err) console.log(err);
+
+        res.send({id: ins.insertId})
+    })
+    
 })
 
+app.post('/api/notes/delete', (req, res) => {
+    if(!req.headers.authorization) {
+        return res.status(403).send({message: "Tu petición no tiene cabecera de autorización"});
+    }
+    let user = jwt.decode(req.headers.authorization, config.token);
+    db.query('DELETE FROM notes WHERE id = ? and user_id = ?', [req.body.id, user.id]);
+    res.sendStatus(200);
+})
+app.post('/api/notes/updateTitle', (req, res) => {
+    if(!req.headers.authorization) {
+        return res.status(403).send({message: "Tu petición no tiene cabecera de autorización"});
+    }
+    let user = jwt.decode(req.headers.authorization, config.token);
+    db.query('UPDATE notes SET title = ? WHERE id = ? and user_id = ?', [req.body.title, req.body.id, user.id]);
+    res.sendStatus(200);
+})
+
+app.post('/api/notes/updateContent', (req, res) => {
+    if(!req.headers.authorization) {
+        return res.status(403).send({message: "Tu petición no tiene cabecera de autorización"});
+    }
+    let user = jwt.decode(req.headers.authorization, config.token);
+    db.query('UPDATE notes SET content = ? WHERE id = ? and user_id = ?', [req.body.content, req.body.id, user.id]);
+    res.sendStatus(200);
+
+})
 app.get('/api/note', (req, res) => {
     if(!req.headers.authorization) {
         return res.status(403).send({message: "Tu petición no tiene cabecera de autorización"});
