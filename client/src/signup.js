@@ -15,8 +15,6 @@ import {
 
 import axios from 'axios';
 
-
-
 class Signup extends React.Component {
 
     state = {

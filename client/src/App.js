@@ -22,6 +22,8 @@ import Main from './main';
 import Signin from './signin';
 import Signup from './signup';
 import Home from './home';
+import Note from './note';
+
 
 const theme = {
   global: {
@@ -41,9 +43,8 @@ const theme = {
  
   render() {
     return (
-      <Grommet style={{height: '100%'}} theme={theme} >
-        
-        <Box fill="vertical" align="center" background="neutral-2">
+      <Grommet theme={theme} >
+        <Box flex="grow" fill="vertical" align="center" background="neutral-2">
         <Router history={history}>
             
             <Switch>
@@ -54,6 +55,7 @@ const theme = {
               <Route exact path="/signin" component={Signin} />
               <Route exact path="/signup" component={Signup} />
               <Route exact path="/home" component={Home} />
+              <Route path="/w/:id" component={Note} />
 
             </Switch>
         </Router>

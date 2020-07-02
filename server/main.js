@@ -79,25 +79,41 @@ app.post('/api/register', (req, res) => {
 })
 
 app.post('/api/create', (req, res) => {
+    if(!req.headers.authorization) {
+        return res.status(403).send({message: "Tu petición no tiene cabecera de autorización"});
+    }
 
+    let user = jwt.decode(req.headers.authorization, config.token);
+    console.log(user)
+})
+
+app.get('/api/note', (req, res) => {
     if(!req.headers.authorization) {
         return res.status(403).send({message: "Tu petición no tiene cabecera de autorización"});
     }
 
     let user = jwt.decode(req.headers.authorization, config.token);
 
-    console.log(user)
+    db.query(`SELECT * FROM Notes WHERE id = ? and user_id = ?`, [req.query.id, user.id], (err, note) => {
+        if(err) {
+            console.log(err);
+            return res.status(401).send({message: 'error'});
+        }
+        if(note.length > 0)
+            res.send(note[0]);
+        else
+            res.send([]);
+    })
 })
 
 app.get('/api/userNotes', (req, res) => {
 
     if(!req.headers.authorization) {
-        console.log("HEADER:", eq.headers.authorization)
+        console.log("HEADER:", req.headers.authorization)
         return res.status(403).send({message: "Tu petición no tiene cabecera de autorización"});
     }
 
     let user = jwt.decode(req.headers.authorization, config.token);
-    console.log(user)
     let from = !req.query.from ? 0 : req.query.from;
     let to = !req.query.to ? 10 : req.query.from;
 
@@ -106,12 +122,12 @@ app.get('/api/userNotes', (req, res) => {
             console.log(err);
             return res.status(401).send({message: 'error'});
         }
-        console.log(notes)
         res.send(notes);
     })
 })
-app.use(express.static('../client/build/'));
 
+
+app.use(express.static('../client/build/'));
 
 app.listen(3000, () => {
     console.log("Listening on port 3000");

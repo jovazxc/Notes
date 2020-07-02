@@ -20,11 +20,17 @@ class Home extends React.Component {
             console.log(data)
         })
     }
+
+    openNote = (id) => {
+        this.props.history.push(`/w/${id}`)
+    }
+
     renderNotes = (note, idx) => {
-        return <Box key={idx}>
-            <h3>{note.title}</h3>
-            <h6>{note.content}</h6>
-            <span>{note.created_date}</span>
+        // Method for render all notes
+        return <Box pad="xsmall" background="white" key={idx} style={{width: '80%', borderRadius: 5, margin: 20}} onClick={() => this.openNote(note.id)}>
+            <h3><b>{note.title}</b></h3>
+            <h5>{note.content.substring(0, 100)}</h5>
+            <h6><i>Creado el {note.created_date}</i></h6>
         </Box>;
     }
     render() {
